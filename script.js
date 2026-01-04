@@ -10,8 +10,10 @@ function updateCounter() {
   counter.textContent = `${checked} / ${total} completed`;
 }
 
+
 checkboxes.forEach(cb => {
   cb.addEventListener("change", updateCounter);
 });
+
 
 updateCounter();
