@@ -42,25 +42,39 @@ body {
   text-decoration: underline;
 }
 
-.checkbox-card {
+.checklist {
+  list-style: none;
+  padding: 0;
+  max-width: 400px;
+}
+
+.checklist li {
+  margin-bottom: 12px;
+}
+
+.checklist label {
   display: flex;
   align-items: center;
   gap: 12px;
 
-  padding: 12px 16px;
-  border-radius: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
   background-color: #1e1e1e;
   border: 1px solid #333;
 
-  width: fit-content;
   cursor: pointer;
 }
 
-.checkbox-card:hover {
+.checklist label:hover {
   background-color: #2a2a2a;
 }
 
-.check-text {
-  color: white;
-  font-size: 14px;
+.checklist input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+}
+
+.checklist input[type="checkbox"]:checked + .text {
+  text-decoration: line-through;
+  color: #888;
 }
