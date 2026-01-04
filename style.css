@@ -46,7 +46,6 @@ body {
   list-style: none;
   padding: 0;
   max-width: 400px;
-  align-items: center;
 }
 
 .checklist li {
@@ -60,8 +59,8 @@ body {
 
   padding: 14px 16px;
   border-radius: 14px;
-  background-color: #1e1e1e;
-  border: 1px solid #333;
+  background-color: #228B22;
+  border: 1px solid #218221;
 
   cursor: pointer;
 }
