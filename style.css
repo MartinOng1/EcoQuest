@@ -6,7 +6,7 @@ body {
   margin-top: 50px;
 }
 
-{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -84,7 +84,7 @@ ul {
 }
 
 .checklist-card {
-  background-color: #228B22
+  background-color: #228B22;
   border-radius: 20px;
   padding: 24px;
   margin-top: 24px;
