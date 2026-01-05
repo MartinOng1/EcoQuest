@@ -1,4 +1,4 @@
-body {
+rbody {
   font-family: Arial, sans-serif;
   background: #e0e0e0;
   color: black;
@@ -45,6 +45,7 @@ body {
 .checklist {
   list-style: none;
   padding: 0;
+  text-align: left;
 }
 
 .checklist li {
@@ -80,7 +81,7 @@ ul {
 .center-column {
   max-width: 500px;
   margin: 40px auto;
-  text-align: left;
+  text-align: center;
 }
 
 .checklist-card {
