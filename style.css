@@ -65,10 +65,6 @@ body {
   cursor: pointer;
 }
 
-.checklist label:hover {
-  background-color: #2a2a2a;
-}
-
 .checklist input[type="checkbox"] {
   width: 18px;
   height: 18px;
