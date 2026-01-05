@@ -7,7 +7,7 @@ function updateCounter() {
   ).length;
 
   const total = checkboxes.length;
-  counter.textContent = `${checked} / ${total} completed`;
+  counter.textContent = `${checked} / ${total} completed today.`;
 }
 
 
