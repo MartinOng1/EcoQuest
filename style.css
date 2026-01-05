@@ -57,9 +57,8 @@ body {
   align-items: center;
   gap: 12px;
 
-  padding: 14px 16px;
+  padding: 12px 8px;
   border-radius: 14px;
-  background-color: #228B22;
 
   cursor: pointer;
 }
@@ -82,4 +81,11 @@ ul {
   max-width: 500px;
   margin: 40px auto;
   text-align: center;
+}
+
+.checklist-card {
+  background-color: #228B22
+  border-radius: 20px;
+  padding: 24px;
+  margin-top: 24px;
 }
