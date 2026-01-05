@@ -45,12 +45,11 @@ body {
 .checklist {
   list-style: none;
   padding: 0;
-  max-width: 400px;
-  justify-content: center;
 }
 
 .checklist li {
-  margin-bottom: 12px;
+  display: flex;
+  justify-content: center;
 }
 
 .checklist label {
@@ -78,4 +77,10 @@ body {
 ul {
   list-style: none;
   padding-left: 0;
+}
+
+.center-column {
+  max-width: 500px;
+  margin: 40px auto;
+  text-align: center;
 }
