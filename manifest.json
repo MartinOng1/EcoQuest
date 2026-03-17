@@ -1,7 +1,7 @@
 {
   "name": "EcoQuest",
   "short_name": "EcoQuest",
-  "description": "Gamified sustainable living for the Marymount neighbourhood",
+  "description": "Gamified sustainable living",
   "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#ffffff",
