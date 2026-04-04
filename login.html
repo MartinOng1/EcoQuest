@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoQuest – Login</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2e7d32">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #2e7d32;
+      --green-light: #4caf50;
+      --green-pale: #e8f5e9;
+      --white: #ffffff;
+      --grey: #757575;
+      --error: #c62828;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--green-pale);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .logo img {
+      width: 72px;
+      height: 72px;
+      border-radius: 18px;
+      margin-bottom: 8px;
+    }
+
+    .logo h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--green);
+    }
+
+    .logo p {
+      font-size: 14px;
+      color: var(--grey);
+      margin-top: 2px;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 32px 28px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+
+    .tabs {
+      display: flex;
+      background: var(--green-pale);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 28px;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background: transparent;
+      border-radius: 10px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--grey);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab.active {
+      background: var(--white);
+      color: var(--green);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .form { display: none; flex-direction: column; gap: 16px; }
+    .form.active { display: flex; }
+
+    label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--green);
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      color: #333;
+      transition: border-color 0.2s;
+      outline: none;
+      appearance: none;
+    }
+
+    input:focus, select:focus { border-color: var(--green-light); }
+
+    .field { display: flex; flex-direction: column; }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--green);
+      color: var(--white);
+      border: none;
+      border-radius: 12px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: 4px;
+    }
+
+    .btn:hover { background: var(--green-light); }
+    .btn:active { transform: scale(0.98); }
+
+    .message {
+      font-size: 13px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      display: none;
+    }
+
+    .message.error { background: #ffebee; color: var(--error); display: block; }
+    .message.success { background: var(--green-pale); color: var(--green); display: block; }
+  </style>
+</head>
+<body>
+
+  <div class="logo">
+    <img src="icon-192.png" alt="EcoQuest">
+    <h1>EcoQuest</h1>
+    <p>Live sustainably, one quest at a time 🌿</p>
+  </div>
+
+  <div class="card">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('login')">Log In</button>
+      <button class="tab" onclick="switchTab('signup')">Sign Up</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <form class="form active" id="login-form" onsubmit="handleLogin(event)">
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="login-email" placeholder="you@email.com" required>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="login-password" placeholder="••••••••" required>
+      </div>
+      <div class="message" id="login-msg"></div>
+      <button class="btn" type="submit">Log In</button>
+    </form>
+
+    <!-- SIGNUP FORM -->
+    <form class="form" id="signup-form" onsubmit="handleSignup(event)">
+      <div class="field">
+        <label>Username</label>
+        <input type="text" id="signup-username" placeholder="EcoWarrior123" required>
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="signup-email" placeholder="you@email.com" required>
+      </div>
+      <div class="field">
+        <label>Age</label>
+        <select id="signup-age" required>
+          <option value="" disabled selected>Select your age</option>
+          ${Array.from({length: 83}, (_, i) => `<option value="${i+8}">${i+8}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="signup-password" placeholder="At least 6 characters" required minlength="6">
+      </div>
+      <div class="message" id="signup-msg"></div>
+      <button class="btn" type="submit">Create Account</button>
+    </form>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+    const supabase = createClient(
+      'https://ejlhwreqymbfbvxasshr.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqbGh3cmVxeW1iZmJ2eGFzc2hyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyNzc1NDUsImV4cCI6MjA5MDg1MzU0NX0.if-ptCOz9z-ZCW1hWBknM3NaN149dQGGPB6ShPV0xOY'
+    )
+
+    // Redirect if already logged in
+    const { data: { session } } = await supabase.auth.getSession()
+    if (session) window.location.href = 'index.html'
+
+    window.switchTab = function(tab) {
+      document.querySelectorAll('.tab').forEach((t, i) => {
+        t.classList.toggle('active', (i === 0) === (tab === 'login'))
+      })
+      document.getElementById('login-form').classList.toggle('active', tab === 'login')
+      document.getElementById('signup-form').classList.toggle('active', tab === 'signup')
+    }
+
+    window.handleLogin = async function(e) {
+      e.preventDefault()
+      const email = document.getElementById('login-email').value
+      const password = document.getElementById('login-password').value
+      const msg = document.getElementById('login-msg')
+
+      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      if (error) {
+        msg.className = 'message error'
+        msg.textContent = 'Incorrect email or password.'
+      } else {
+        window.location.href = 'index.html'
+      }
+    }
+
+    window.handleSignup = async function(e) {
+      e.preventDefault()
+      const username = document.getElementById('signup-username').value.trim()
+      const email = document.getElementById('signup-email').value
+      const age = parseInt(document.getElementById('signup-age').value)
+      const password = document.getElementById('signup-password').value
+      const msg = document.getElementById('signup-msg')
+
+      // Check username not taken
+      const { data: existing } = await supabase
+        .from('profiles')
+        .select('username')
+        .eq('username', username)
+        .single()
+
+      if (existing) {
+        msg.className = 'message error'
+        msg.textContent = 'Username already taken. Try another!'
+        return
+      }
+
+      const { data, error } = await supabase.auth.signUp({ email, password })
+      if (error) {
+        msg.className = 'message error'
+        msg.textContent = error.message
+        return
+      }
+
+      // Create profile
+      await supabase.from('profiles').insert({
+        id: data.user.id,
+        username,
+        age,
+        points: 0,
+        streak: 0
+      })
+
+      msg.className = 'message success'
+      msg.textContent = 'Account created! Logging you in...'
+      setTimeout(() => window.location.href = 'index.html', 1500)
+    }
+  </script>
+</body>
+</html>

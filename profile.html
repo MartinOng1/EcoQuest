@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoQuest – Profile</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2e7d32">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --green: #2e7d32; --green-light: #4caf50; --green-pale: #e8f5e9; --white: #ffffff; --grey: #757575; }
+
+    body { font-family: 'Nunito', sans-serif; background: #f5f5f5; min-height: 100vh; padding-bottom: 80px; }
+
+    nav {
+      background: var(--green);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .nav-brand { font-size: 20px; font-weight: 800; color: white; display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .nav-brand img { width: 32px; height: 32px; border-radius: 8px; }
+
+    .profile-header {
+      background: var(--green);
+      padding: 24px 20px 48px;
+      text-align: center;
+      color: white;
+    }
+
+    .avatar {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 36px;
+      margin: 0 auto 12px;
+      border: 3px solid rgba(255,255,255,0.4);
+    }
+
+    .profile-header h2 { font-size: 22px; font-weight: 800; }
+    .profile-header p { font-size: 14px; opacity: 0.8; margin-top: 4px; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin: -28px 16px 20px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 16px;
+      padding: 16px 12px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .stat-card .emoji { font-size: 24px; }
+    .stat-card .value { font-size: 22px; font-weight: 800; color: var(--green); margin: 4px 0; }
+    .stat-card .label { font-size: 11px; font-weight: 700; color: var(--grey); text-transform: uppercase; }
+
+    .section { padding: 0 16px 16px; }
+    .section-title { font-size: 13px; font-weight: 800; color: var(--grey); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+
+    .badge-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+
+    .badge-item {
+      background: white;
+      border-radius: 14px;
+      padding: 16px 8px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .badge-item .badge-emoji { font-size: 28px; }
+    .badge-item .badge-name { font-size: 11px; font-weight: 800; color: #333; margin-top: 6px; }
+    .badge-item.locked { opacity: 0.35; filter: grayscale(1); }
+
+    .logout-btn {
+      width: calc(100% - 32px);
+      margin: 8px 16px;
+      padding: 14px;
+      background: #ffebee;
+      color: #c62828;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: white; display: flex;
+      box-shadow: 0 -2px 12px rgba(0,0,0,0.08); z-index: 100;
+    }
+
+    .bottom-nav a {
+      flex: 1; display: flex; flex-direction: column; align-items: center;
+      padding: 10px 0; text-decoration: none; font-size: 11px; font-weight: 800;
+      color: var(--grey); gap: 4px; transition: color 0.2s;
+    }
+
+    .bottom-nav a.active { color: var(--green); }
+    .bottom-nav a span { font-size: 22px; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-brand" href="index.html">
+      <img src="icon-192.png" alt="EcoQuest"> EcoQuest
+    </a>
+  </nav>
+
+  <div class="profile-header">
+    <div class="avatar">🌿</div>
+    <h2 id="username-display">Loading...</h2>
+    <p id="email-display"></p>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="emoji">⭐</div>
+      <div class="value" id="points-val">0</div>
+      <div class="label">Points</div>
+    </div>
+    <div class="stat-card">
+      <div class="emoji">🔥</div>
+      <div class="value" id="streak-val">0</div>
+      <div class="label">Streak</div>
+    </div>
+    <div class="stat-card">
+      <div class="emoji">✅</div>
+      <div class="value" id="quests-val">0</div>
+      <div class="label">Quests</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Badges</div>
+    <div class="badge-grid" id="badge-grid">
+      <!-- Filled by JS -->
+    </div>
+  </div>
+
+  <button class="logout-btn" id="logout-btn">Log Out</button>
+
+  <div class="bottom-nav">
+    <a href="index.html"><span>🏠</span>Home</a>
+    <a href="quests.html"><span>📋</span>Quests</a>
+    <a href="profile.html" class="active"><span>👤</span>Profile</a>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+    const supabase = createClient(
+      'https://ejlhwreqymbfbvxasshr.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqbGh3cmVxeW1iZmJ2eGFzc2hyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyNzc1NDUsImV4cCI6MjA5MDg1MzU0NX0.if-ptCOz9z-ZCW1hWBknM3NaN149dQGGPB6ShPV0xOY'
+    )
+
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session) { window.location.href = 'login.html'; }
+    const user = session.user
+
+    const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
+    const { count: questCount } = await supabase.from('completed_quests').select('*', { count: 'exact' }).eq('user_id', user.id)
+
+    document.getElementById('username-display').textContent = profile.username
+    document.getElementById('email-display').textContent = user.email
+    document.getElementById('points-val').textContent = profile.points
+    document.getElementById('streak-val').textContent = profile.streak
+    document.getElementById('quests-val').textContent = questCount || 0
+
+    // Badges
+    const badges = [
+      { emoji: '🌱', name: 'First Quest', unlocked: questCount >= 1 },
+      { emoji: '🔥', name: '3-Day Streak', unlocked: profile.streak >= 3 },
+      { emoji: '⭐', name: '50 Points', unlocked: profile.points >= 50 },
+      { emoji: '🌍', name: 'Eco Warrior', unlocked: questCount >= 10 },
+      { emoji: '💧', name: 'Water Saver', unlocked: questCount >= 5 },
+      { emoji: '♻️', name: 'Recycler', unlocked: profile.points >= 100 },
+    ]
+
+    const grid = document.getElementById('badge-grid')
+    badges.forEach(b => {
+      grid.innerHTML += `
+        <div class="badge-item ${b.unlocked ? '' : 'locked'}">
+          <div class="badge-emoji">${b.emoji}</div>
+          <div class="badge-name">${b.name}</div>
+        </div>
+      `
+    })
+
+    document.getElementById('logout-btn').onclick = async () => {
+      await supabase.auth.signOut()
+      window.location.href = 'login.html'
+    }
+  </script>
+</body>
+</html>
