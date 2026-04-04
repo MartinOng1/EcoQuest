@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoQuest – Leaderboard</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2e7d32">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --green: #2e7d32; --green-light: #4caf50; --green-pale: #e8f5e9; --white: #ffffff; --grey: #757575; --gold: #f9a825; --silver: #9e9e9e; --bronze: #8d6e63; }
+    body { font-family: 'Nunito', sans-serif; background: #f5f5f5; min-height: 100vh; padding-bottom: 80px; }
+
+    nav { background: var(--green); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+    .nav-brand { font-size: 20px; font-weight: 800; color: white; display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .nav-brand img { width: 32px; height: 32px; border-radius: 8px; }
+
+    .hero {
+      background: linear-gradient(160deg, var(--green) 0%, #1b5e20 100%);
+      padding: 28px 20px 48px;
+      text-align: center;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '🏆';
+      position: absolute;
+      font-size: 120px;
+      opacity: 0.08;
+      right: -10px;
+      top: -10px;
+    }
+
+    .hero h2 { font-size: 26px; font-weight: 900; margin-bottom: 4px; }
+    .hero p { font-size: 14px; opacity: 0.8; }
+
+    .your-rank {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 14px;
+      padding: 12px 20px;
+      margin-top: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .content { padding: 0 16px; margin-top: -20px; position: relative; z-index: 2; }
+
+    /* TOP 3 PODIUM */
+    .podium {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .podium-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      max-width: 110px;
+    }
+
+    .podium-avatar {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      margin-bottom: 8px;
+      border: 3px solid transparent;
+    }
+
+    .podium-item:nth-child(1) .podium-avatar { border-color: var(--silver); background: #f5f5f5; order: 2; }
+    .podium-item:nth-child(2) .podium-avatar { border-color: var(--gold); background: #fff8e1; width: 60px; height: 60px; font-size: 26px; }
+    .podium-item:nth-child(3) .podium-avatar { border-color: var(--bronze); background: #efebe9; }
+
+    .podium-name { font-size: 12px; font-weight: 800; color: #333; text-align: center; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; }
+    .podium-pts { font-size: 11px; font-weight: 700; color: var(--grey); margin-bottom: 6px; }
+
+    .podium-block {
+      width: 100%;
+      border-radius: 12px 12px 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 900;
+      color: white;
+      padding: 12px 0;
+    }
+
+    .podium-item:nth-child(1) .podium-block { background: var(--silver); height: 70px; }
+    .podium-item:nth-child(2) .podium-block { background: var(--gold); height: 100px; }
+    .podium-item:nth-child(3) .podium-block { background: var(--bronze); height: 50px; }
+
+    /* REORDER: 2nd, 1st, 3rd */
+    .podium { flex-direction: row; }
+    .podium-item.rank-1 { order: 2; }
+    .podium-item.rank-2 { order: 1; }
+    .podium-item.rank-3 { order: 3; }
+
+    /* LIST */
+    .list-card {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    }
+
+    .list-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      border-bottom: 1px solid #f0f0f0;
+      transition: background 0.15s;
+    }
+
+    .list-item:last-child { border-bottom: none; }
+    .list-item.is-you { background: var(--green-pale); }
+
+    .rank-num {
+      font-size: 14px;
+      font-weight: 900;
+      color: var(--grey);
+      width: 24px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .list-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--green-pale);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .list-info { flex: 1; }
+    .list-name { font-size: 14px; font-weight: 800; color: #333; }
+    .list-streak { font-size: 12px; font-weight: 600; color: var(--grey); }
+    .list-pts { font-size: 15px; font-weight: 900; color: var(--green); }
+
+    .you-tag {
+      font-size: 10px;
+      font-weight: 800;
+      background: var(--green);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-left: 6px;
+    }
+
+    .loading { text-align: center; padding: 40px; color: var(--grey); font-weight: 700; }
+    .empty { text-align: center; padding: 32px; color: var(--grey); font-weight: 700; font-size: 14px; }
+
+    .section-title { font-size: 13px; font-weight: 800; color: var(--grey); text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 10px; }
+
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; box-shadow: 0 -2px 12px rgba(0,0,0,0.08); z-index: 100; }
+    .bottom-nav a { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 10px 0; text-decoration: none; font-size: 11px; font-weight: 800; color: var(--grey); gap: 4px; }
+    .bottom-nav a.active { color: var(--green); }
+    .bottom-nav a span { font-size: 22px; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-brand" href="index.html"><img src="icon-192.png" alt="EcoQuest">EcoQuest</a>
+  </nav>
+
+  <div class="hero">
+    <h2>🏆 Leaderboard</h2>
+    <p>Top eco-warriors in EcoQuest</p>
+    <div class="your-rank" id="your-rank">Finding your rank...</div>
+  </div>
+
+  <div class="content">
+    <div id="podium-container" class="podium"></div>
+
+    <div class="section-title">All Rankings</div>
+    <div class="list-card">
+      <div id="list-container"><div class="loading">Loading...</div></div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="index.html"><span>🏠</span>Home</a>
+    <a href="quests.html"><span>📋</span>Quests</a>
+    <a href="leaderboard.html" class="active"><span>🏆</span>Leaderboard</a>
+    <a href="profile.html"><span>👤</span>Profile</a>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+    const supabase = createClient(
+      'https://ejlhwreqymbfbvxasshr.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqbGh3cmVxeW1iZmJ2eGFzc2hyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyNzc1NDUsImV4cCI6MjA5MDg1MzU0NX0.if-ptCOz9z-ZCW1hWBknM3NaN149dQGGPB6ShPV0xOY'
+    )
+
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session) { window.location.href = 'login.html'; return }
+    const user = session.user
+
+    const { data: users } = await supabase
+      .from('profiles')
+      .select('id, username, points, streak')
+      .order('points', { ascending: false })
+      .limit(50)
+
+    if (!users || users.length === 0) {
+      document.getElementById('list-container').innerHTML = '<div class="empty">No users yet!</div>'
+      document.getElementById('podium-container').innerHTML = ''
+      document.getElementById('your-rank').textContent = 'Be the first! 🌱'
+      return
+    }
+
+    const myRank = users.findIndex(u => u.id === user.id) + 1
+    const me = users.find(u => u.id === user.id)
+    document.getElementById('your-rank').innerHTML = myRank > 0
+      ? `You are ranked <strong>#${myRank}</strong> with ${me?.points || 0} pts ⭐`
+      : 'Complete a quest to appear on the board!'
+
+    const avatarEmojis = ['🌱', '🌿', '🍃', '🌳', '🌍', '♻️', '💧', '🌻', '🦋', '🐝']
+    const getAvatar = (index) => avatarEmojis[index % avatarEmojis.length]
+
+    // PODIUM (top 3)
+    const top3 = users.slice(0, 3)
+    const podium = document.getElementById('podium-container')
+    podium.innerHTML = ''
+
+    const medals = ['🥇', '🥈', '🥉']
+    top3.forEach((u, i) => {
+      const rank = i + 1
+      const isYou = u.id === user.id
+      const div = document.createElement('div')
+      div.className = `podium-item rank-${rank}`
+      div.innerHTML = `
+        <div class="podium-avatar">${getAvatar(i)}</div>
+        <div class="podium-name">${u.username}${isYou ? ' 👈' : ''}</div>
+        <div class="podium-pts">${u.points} pts</div>
+        <div class="podium-block">${medals[i]}</div>
+      `
+      podium.appendChild(div)
+    })
+
+    // FULL LIST
+    const listContainer = document.getElementById('list-container')
+    listContainer.innerHTML = ''
+
+    users.forEach((u, i) => {
+      const rank = i + 1
+      const isYou = u.id === user.id
+      const div = document.createElement('div')
+      div.className = 'list-item' + (isYou ? ' is-you' : '')
+      div.innerHTML = `
+        <div class="rank-num">${rank <= 3 ? medals[rank - 1] : rank}</div>
+        <div class="list-avatar">${getAvatar(i)}</div>
+        <div class="list-info">
+          <div class="list-name">${u.username}${isYou ? '<span class="you-tag">You</span>' : ''}</div>
+          <div class="list-streak">🔥 ${u.streak} day streak</div>
+        </div>
+        <div class="list-pts">${u.points} pts</div>
+      `
+      listContainer.appendChild(div)
+    })
+  </script>
+</body>
+</html>
