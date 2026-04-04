@@ -221,7 +221,6 @@
       document.getElementById('list-container').innerHTML = '<div class="empty">No users yet!</div>'
       document.getElementById('podium-container').innerHTML = ''
       document.getElementById('your-rank').textContent = 'Be the first! 🌱'
-      return
     }
 
     const myRank = users.findIndex(u => u.id === user.id) + 1
