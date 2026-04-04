@@ -169,11 +169,11 @@
     <form class="form active" id="login-form" onsubmit="handleLogin(event)">
       <div class="field">
         <label>Email</label>
-        <input type="email" id="login-email" placeholder="you@email.com" required>
+        <input type="email" id="login-email" placeholder="Email" required>
       </div>
       <div class="field">
         <label>Password</label>
-        <input type="password" id="login-password" placeholder="••••••••" required>
+        <input type="password" id="login-password" placeholder="Account Password" required>
       </div>
       <div class="message" id="login-msg"></div>
       <button class="btn" type="submit">Log In</button>
@@ -183,22 +183,19 @@
     <form class="form" id="signup-form" onsubmit="handleSignup(event)">
       <div class="field">
         <label>Username</label>
-        <input type="text" id="signup-username" placeholder="EcoWarrior123" required>
+        <input type="text" id="signup-username" placeholder="Enter your username here" required>
       </div>
       <div class="field">
         <label>Email</label>
-        <input type="email" id="signup-email" placeholder="you@email.com" required>
+        <input type="email" id="signup-email" placeholder="Enter your email here" required>
       </div>
       <div class="field">
         <label>Age</label>
-        <select id="signup-age" required>
-          <option value="" disabled selected>Select your age</option>
-          ${Array.from({length: 83}, (_, i) => `<option value="${i+8}">${i+8}</option>`).join('')}
-        </select>
+        <input type="number" id="signup-age" placeholder="Enter your age here" min="8" max="100" required>
       </div>
       <div class="field">
         <label>Password</label>
-        <input type="password" id="signup-password" placeholder="At least 6 characters" required minlength="6">
+        <input type="password" id="signup-password" placeholder="Enter your account password here" required minlength="6">
       </div>
       <div class="message" id="signup-msg"></div>
       <button class="btn" type="submit">Create Account</button>
