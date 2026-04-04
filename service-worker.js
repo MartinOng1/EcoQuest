@@ -1,4 +1,4 @@
-const CACHE_NAME = "chsecoquest";
+const CACHE_NAME = "chsecoquest-v1.1";
 const FILES_TO_CACHE = [
   "/",
   "/index.html"
