@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoQuest – Events</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2e7d32">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --green: #2e7d32; --green-light: #4caf50; --green-pale: #e8f5e9; --white: #ffffff; --grey: #757575; }
+    body { font-family: 'Nunito', sans-serif; background: #f5f5f5; min-height: 100vh; padding-bottom: 80px; }
+
+    nav { background: var(--green); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+    .nav-brand { font-size: 20px; font-weight: 800; color: white; display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .nav-brand img { width: 32px; height: 32px; border-radius: 8px; }
+
+    .hero { background: linear-gradient(160deg, var(--green) 0%, #1b5e20 100%); padding: 28px 20px 48px; color: white; position: relative; overflow: hidden; }
+    .hero::before { content: '🌍'; position: absolute; font-size: 120px; opacity: 0.08; right: -10px; top: -10px; }
+    .hero h2 { font-size: 26px; font-weight: 900; margin-bottom: 4px; }
+    .hero p { font-size: 14px; opacity: 0.8; }
+
+    .content { padding: 0 16px; margin-top: -20px; position: relative; z-index: 2; }
+
+    /* NO EVENT */
+    .no-event-card {
+      background: white;
+      border-radius: 20px;
+      padding: 40px 24px;
+      text-align: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    }
+    .no-event-card .emoji { font-size: 48px; margin-bottom: 12px; }
+    .no-event-card h3 { font-size: 18px; font-weight: 800; color: #333; margin-bottom: 8px; }
+    .no-event-card p { font-size: 14px; color: var(--grey); font-weight: 600; line-height: 1.5; }
+
+    /* EVENT CARD */
+    .event-card {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+      margin-bottom: 16px;
+    }
+
+    .event-header {
+      background: linear-gradient(135deg, var(--green), var(--green-light));
+      padding: 24px 20px;
+      color: white;
+    }
+
+    .event-badge-preview {
+      font-size: 40px;
+      margin-bottom: 8px;
+    }
+
+    .event-header h3 { font-size: 20px; font-weight: 900; margin-bottom: 4px; }
+    .event-header p { font-size: 14px; opacity: 0.85; line-height: 1.5; }
+
+    .active-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .event-body { padding: 20px; }
+
+    /* ALREADY SIGNED UP */
+    .signed-up-banner {
+      background: var(--green-pale);
+      border: 2px solid var(--green-light);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .signed-up-banner .su-emoji { font-size: 28px; }
+    .signed-up-banner h4 { font-size: 15px; font-weight: 800; color: var(--green); margin-bottom: 2px; }
+    .signed-up-banner p { font-size: 13px; color: var(--grey); font-weight: 600; }
+
+    /* BADGE AWARDED */
+    .badge-awarded-banner {
+      background: #fff8e1;
+      border: 2px solid #f9a825;
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .badge-awarded-banner .ba-emoji { font-size: 28px; }
+    .badge-awarded-banner h4 { font-size: 15px; font-weight: 800; color: #f57f17; margin-bottom: 2px; }
+    .badge-awarded-banner p { font-size: 13px; color: var(--grey); font-weight: 600; }
+
+    /* FORM */
+    .form-title { font-size: 15px; font-weight: 800; color: #333; margin-bottom: 14px; }
+
+    .field { display: flex; flex-direction: column; margin-bottom: 14px; }
+    label { font-size: 13px; font-weight: 700; color: var(--green); margin-bottom: 4px; }
+    input, select {
+      width: 100%; padding: 12px 16px;
+      border: 2px solid #e0e0e0; border-radius: 12px;
+      font-family: 'Nunito', sans-serif; font-size: 15px; color: #333;
+      transition: border-color 0.2s; outline: none;
+    }
+    input:focus, select:focus { border-color: var(--green-light); }
+
+    .btn {
+      width: 100%; padding: 14px;
+      background: var(--green); color: white; border: none;
+      border-radius: 12px; font-family: 'Nunito', sans-serif;
+      font-size: 16px; font-weight: 800; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: var(--green-light); }
+    .btn:disabled { background: #bdbdbd; cursor: not-allowed; }
+
+    .message { font-size: 13px; padding: 10px 14px; border-radius: 10px; margin-bottom: 12px; display: none; }
+    .message.error { background: #ffebee; color: #c62828; display: block; }
+    .message.success { background: var(--green-pale); color: var(--green); display: block; }
+
+    /* ADMIN SECTION */
+    .admin-section {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+      margin-top: 16px;
+      display: none;
+    }
+
+    .admin-title {
+      font-size: 13px; font-weight: 800; color: var(--grey);
+      text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .participant-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 0; border-bottom: 1px solid #f0f0f0;
+    }
+    .participant-item:last-child { border-bottom: none; }
+    .participant-info { flex: 1; }
+    .participant-info .p-name { font-size: 14px; font-weight: 800; color: #333; }
+    .participant-info .p-class { font-size: 12px; font-weight: 600; color: var(--grey); }
+
+    .award-btn {
+      background: #fff8e1; color: #f57f17; border: 2px solid #f9a825;
+      border-radius: 10px; padding: 6px 12px;
+      font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 12px;
+      cursor: pointer; white-space: nowrap;
+      transition: background 0.2s;
+    }
+    .award-btn:hover { background: #ffecb3; }
+    .award-btn.awarded { background: var(--green-pale); color: var(--green); border-color: var(--green-light); cursor: default; }
+
+    .admin-toggle {
+      background: none; border: 2px solid #e0e0e0;
+      border-radius: 12px; padding: 10px 16px;
+      font-family: 'Nunito', sans-serif; font-weight: 800;
+      font-size: 13px; color: var(--grey); cursor: pointer;
+      width: 100%; margin-top: 16px;
+      transition: border-color 0.2s;
+    }
+    .admin-toggle:hover { border-color: var(--green-light); color: var(--green); }
+
+    .loading { text-align: center; padding: 40px; color: var(--grey); font-weight: 700; }
+
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; box-shadow: 0 -2px 12px rgba(0,0,0,0.08); z-index: 100; }
+    .bottom-nav a { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 10px 0; text-decoration: none; font-size: 11px; font-weight: 800; color: var(--grey); gap: 4px; }
+    .bottom-nav a.active { color: var(--green); }
+    .bottom-nav a span { font-size: 22px; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-brand" href="index.html"><img src="icon-192.png" alt="EcoQuest">EcoQuest</a>
+  </nav>
+
+  <div class="hero">
+    <h2>🌍 Events</h2>
+    <p>Join EcoQuest events and earn exclusive badges!</p>
+  </div>
+
+  <div class="content">
+    <div id="event-container"><div class="loading">Loading events...</div></div>
+    <button class="admin-toggle" id="admin-toggle" onclick="toggleAdmin()">🔧 Admin View</button>
+    <div class="admin-section" id="admin-section">
+      <div class="admin-title">⚙️ Participants</div>
+      <div id="participants-list"><div class="loading">Loading...</div></div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="index.html"><span>🏠</span>Home</a>
+    <a href="quests.html"><span>📋</span>Quests</a>
+    <a href="events.html" class="active"><span>🌍</span>Events</a>
+    <a href="leaderboard.html"><span>🏆</span>Leaderboard</a>
+    <a href="profile.html"><span>👤</span>Profile</a>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+    const supabase = createClient(
+      'https://ejlhwreqymbfbvxasshr.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqbGh3cmVxeW1iZmJ2eGFzc2hyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyNzc1NDUsImV4cCI6MjA5MDg1MzU0NX0.if-ptCOz9z-ZCW1hWBknM3NaN149dQGGPB6ShPV0xOY'
+    )
+
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session) { window.location.href = 'login.html' }
+    const user = session.user
+
+    // Load active event
+    const { data: events } = await supabase
+      .from('events')
+      .select('*')
+      .eq('is_active', true)
+      .limit(1)
+
+    const event = events?.[0]
+    const container = document.getElementById('event-container')
+
+    if (!event) {
+      container.innerHTML = `
+        <div class="no-event-card">
+          <div class="emoji">😴</div>
+          <h3>No events right now</h3>
+          <p>Check back soon — EcoQuest events will appear here when they're live. Complete daily quests in the meantime!</p>
+        </div>
+      `
+    } else {
+      // Check if user already signed up
+      const { data: existing } = await supabase
+        .from('event_participants')
+        .select('*')
+        .eq('event_id', event.id)
+        .eq('user_id', user.id)
+        .single()
+
+      const signedUp = !!existing
+      const badgeAwarded = existing?.badge_awarded
+
+      container.innerHTML = `
+        <div class="event-card">
+          <div class="event-header">
+            <div class="active-pill">🟢 Live Now</div>
+            <div class="event-badge-preview">${event.badge_emoji}</div>
+            <h3>${event.title}</h3>
+            <p>${event.description}</p>
+          </div>
+          <div class="event-body">
+            ${badgeAwarded ? `
+              <div class="badge-awarded-banner">
+                <div class="ba-emoji">${event.badge_emoji}</div>
+                <div>
+                  <h4>Badge Awarded! ${event.badge_emoji}</h4>
+                  <p>You earned the "${event.badge_name}" badge — check your profile!</p>
+                </div>
+              </div>
+            ` : signedUp ? `
+              <div class="signed-up-banner">
+                <div class="su-emoji">✅</div>
+                <div>
+                  <h4>You're signed up!</h4>
+                  <p>You'll receive the ${event.badge_emoji} "${event.badge_name}" badge once verified.</p>
+                </div>
+              </div>
+            ` : `
+              <div class="form-title">Sign up to participate</div>
+              <div class="message" id="form-msg"></div>
+              <div class="field">
+                <label>Full Name</label>
+                <input type="text" id="participant-name" placeholder="e.g. Martin Ong" required>
+              </div>
+              <div class="field">
+                <label>Class</label>
+                <input type="text" id="participant-class" placeholder="e.g. 3-9" required>
+              </div>
+              <button class="btn" id="signup-btn" onclick="signUpForEvent(${event.id}, '${event.badge_emoji}', '${event.badge_name}')">
+                Join Event & Earn ${event.badge_emoji}
+              </button>
+            `}
+          </div>
+        </div>
+      `
+    }
+
+    window.signUpForEvent = async function(eventId, badgeEmoji, badgeName) {
+      const name = document.getElementById('participant-name').value.trim()
+      const cls = document.getElementById('participant-class').value.trim()
+      const msg = document.getElementById('form-msg')
+      const btn = document.getElementById('signup-btn')
+
+      if (!name || !cls) {
+        msg.className = 'message error'
+        msg.textContent = 'Please fill in both your name and class!'
+        return
+      }
+
+      btn.disabled = true
+      btn.textContent = 'Signing up...'
+
+      const { error } = await supabase.from('event_participants').insert({
+        event_id: eventId,
+        name,
+        class: cls,
+        user_id: user.id,
+        badge_awarded: false
+      })
+
+      if (error) {
+        msg.className = 'message error'
+        msg.textContent = 'Something went wrong. Try again!'
+        btn.disabled = false
+        btn.textContent = `Join Event & Earn ${badgeEmoji}`
+        return
+      }
+
+      // Show signed up state
+      document.querySelector('.event-body').innerHTML = `
+        <div class="signed-up-banner">
+          <div class="su-emoji">✅</div>
+          <div>
+            <h4>You're signed up!</h4>
+            <p>You'll receive the ${badgeEmoji} "${badgeName}" badge once verified.</p>
+          </div>
+        </div>
+      `
+    }
+
+    // ADMIN: load participants
+    window.toggleAdmin = async function() {
+      const section = document.getElementById('admin-section')
+      const isVisible = section.style.display === 'block'
+      section.style.display = isVisible ? 'none' : 'block'
+      if (!isVisible) await loadParticipants()
+    }
+
+    async function loadParticipants() {
+      if (!event) {
+        document.getElementById('participants-list').innerHTML = '<div class="loading">No active event.</div>'
+        return
+      }
+
+      const { data: participants } = await supabase
+        .from('event_participants')
+        .select('*')
+        .eq('event_id', event.id)
+        .order('signed_up_at', { ascending: true })
+
+      const list = document.getElementById('participants-list')
+
+      if (!participants || participants.length === 0) {
+        list.innerHTML = '<div class="loading">No participants yet.</div>'
+        return
+      }
+
+      list.innerHTML = ''
+      participants.forEach(p => {
+        const div = document.createElement('div')
+        div.className = 'participant-item'
+        div.id = `participant-${p.id}`
+        div.innerHTML = `
+          <div class="participant-info">
+            <div class="p-name">${p.name}</div>
+            <div class="p-class">Class ${p.class} · Signed up ${new Date(p.signed_up_at).toLocaleTimeString('en-SG', { hour: '2-digit', minute: '2-digit' })}</div>
+          </div>
+          <button class="award-btn ${p.badge_awarded ? 'awarded' : ''}" id="award-${p.id}"
+            onclick="awardBadge(${p.id}, '${p.user_id}', '${event.badge_emoji}', '${event.badge_name}')">
+            ${p.badge_awarded ? '✅ Awarded' : `Award ${event.badge_emoji}`}
+          </button>
+        `
+        list.appendChild(div)
+      })
+    }
+
+    window.awardBadge = async function(participantId, userId, badgeEmoji, badgeName) {
+      const btn = document.getElementById(`award-${participantId}`)
+      btn.disabled = true
+      btn.textContent = 'Awarding...'
+
+      // Mark badge as awarded in event_participants
+      await supabase.from('event_participants')
+        .update({ badge_awarded: true })
+        .eq('id', participantId)
+
+      // Add badge to user's profile
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('event_badges')
+        .eq('id', userId)
+        .single()
+
+      const currentBadges = profile?.event_badges || []
+      const alreadyHas = currentBadges.some(b => b.name === badgeName)
+
+      if (!alreadyHas) {
+        await supabase.from('profiles')
+          .update({ event_badges: [...currentBadges, { emoji: badgeEmoji, name: badgeName }] })
+          .eq('id', userId)
+      }
+
+      btn.className = 'award-btn awarded'
+      btn.textContent = '✅ Awarded'
+      btn.disabled = false
+    }
+  </script>
+</body>
+</html>

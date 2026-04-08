@@ -48,7 +48,7 @@
     .complete-btn:disabled { background: #bdbdbd; cursor: not-allowed; }
     .complete-btn:not(:disabled):hover { background: var(--green-light); }
 
-    .completed-stamp { align-items: center; gap: 6px; font-size: 14px; font-weight: 800; color: var(--green); }
+    .streak-lost { background: #fff3e0; border: 2px solid #ff9800; border-radius: 14px; padding: 14px 16px; margin-bottom: 16px; font-size: 14px; font-weight: 700; color: #e65100; display: none; }
 
     .loading { text-align: center; padding: 40px; color: var(--grey); font-weight: 700; }
 
@@ -78,6 +78,7 @@
   </div>
 
   <div class="content">
+    <div class="streak-lost" id="streak-lost">😔 You missed a day — your streak has been reset to 0. Start fresh today!</div>
     <div class="section-title">Complete at least 1 quest to keep your streak!</div>
     <div id="quests-container"><div class="loading">Loading your quests...</div></div>
   </div>
@@ -87,6 +88,7 @@
   <div class="bottom-nav">
     <a href="index.html"><span>🏠</span>Home</a>
     <a href="quests.html" class="active"><span>📋</span>Quests</a>
+    <a href="events.html"><span>🌍</span>Events</a>
     <a href="leaderboard.html"><span>🏆</span>Leaderboard</a>
     <a href="profile.html"><span>👤</span>Profile</a>
   </div>
@@ -108,11 +110,28 @@
     }
 
     const today = new Date().toISOString().split('T')[0]
+    const yesterday = new Date()
+    yesterday.setDate(yesterday.getDate() - 1)
+    const yesterdayStr = yesterday.toISOString().split('T')[0]
+
     document.getElementById('date-label').textContent = new Date().toLocaleDateString('en-SG', { weekday: 'long', day: 'numeric', month: 'long' })
 
     const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
+
+    // STREAK RESET CHECK on page load
+    let currentStreak = profile.streak
+    if (profile.last_completed && profile.last_completed !== today && profile.last_completed !== yesterdayStr) {
+      // Missed a day — reset streak
+      currentStreak = 0
+      await supabase.from('profiles').update({ streak: 0 }).eq('id', user.id)
+      profile.streak = 0
+      if (profile.last_completed) {
+        document.getElementById('streak-lost').style.display = 'block'
+      }
+    }
+
     document.getElementById('points-display').textContent = profile.points
-    document.getElementById('streak-display').textContent = profile.streak
+    document.getElementById('streak-display').textContent = currentStreak
 
     const { data: allQuests } = await supabase.from('quests').select('*')
 
@@ -157,7 +176,7 @@
           <div class="quest-points">+${quest.points_value} pts</div>
         </div>
         ${done
-          ? `<div class="completed-stamp" style="display:flex">✅ Completed!</div>`
+          ? `<div class="completed-stamp" style="display:flex;align-items:center;gap:6px;font-size:14px;font-weight:800;color:var(--green)">✅ Completed!</div>`
           : `<div class="quest-bottom">
               <label class="photo-label">📷 Upload photo proof
                 <input type="file" accept="image/*" capture="environment" data-quest="${quest.id}">
@@ -189,7 +208,6 @@
         btn.disabled = true
         btn.textContent = 'Saving...'
 
-        // Upload photo
         const fileInput = document.querySelector(`input[data-quest="${questId}"]`)
         let photoUrl = null
         if (fileInput.files[0]) {
@@ -210,9 +228,6 @@
         // STREAK: only update on first quest of the day
         let newStreak = profile.streak
         if (!alreadyDidOneToday) {
-          const yesterday = new Date()
-          yesterday.setDate(yesterday.getDate() - 1)
-          const yesterdayStr = yesterday.toISOString().split('T')[0]
           newStreak = (profile.last_completed === yesterdayStr) ? profile.streak + 1 : 1
           profile.streak = newStreak
           alreadyDidOneToday = true
@@ -227,8 +242,7 @@
         card.classList.add('completed')
         card.querySelector('.quest-bottom').style.display = 'none'
         const stamp = document.createElement('div')
-        stamp.className = 'completed-stamp'
-        stamp.style.display = 'flex'
+        stamp.style.cssText = 'display:flex;align-items:center;gap:6px;font-size:14px;font-weight:800;color:var(--green)'
         stamp.innerHTML = '✅ Completed!'
         card.appendChild(stamp)
 

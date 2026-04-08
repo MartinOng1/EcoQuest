@@ -196,6 +196,7 @@
   <div class="bottom-nav">
     <a href="index.html"><span>🏠</span>Home</a>
     <a href="quests.html"><span>📋</span>Quests</a>
+    <a href="events.html"><span>🌍</span>Events</a>
     <a href="leaderboard.html" class="active"><span>🏆</span>Leaderboard</a>
     <a href="profile.html"><span>👤</span>Profile</a>
   </div>
@@ -221,7 +222,6 @@
       document.getElementById('list-container').innerHTML = '<div class="empty">No users yet!</div>'
       document.getElementById('podium-container').innerHTML = ''
       document.getElementById('your-rank').textContent = 'Be the first! 🌱'
-      return
     }
 
     const myRank = users.findIndex(u => u.id === user.id) + 1
